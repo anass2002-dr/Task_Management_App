@@ -25,11 +25,15 @@ builder.Services.AddScoped<IRepositoryUtilisateur, RepositoryUtilisateur>();
 
 builder.Services.AddScoped<ITacheService, TacheService>();
 builder.Services.AddScoped<IRepositoryTache, RepositoryTache>();
-
+var Myplociy = "Mypolicy";
+builder.Services.AddCors(options => options.AddPolicy(name: Myplociy, policy =>
+{
+    policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
+}));
 
 
 var app = builder.Build();
-
+app.UseCors(Myplociy);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

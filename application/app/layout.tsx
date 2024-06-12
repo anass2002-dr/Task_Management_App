@@ -22,7 +22,9 @@ export default function RootLayout({
         <div className="m-auto">
           <Navbar/>
         </div>
+        <div className="p-5">
         {children}
+        </div>
         
         
         </body>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Navbar(){
     return (
 <nav className="navbar navbar-expand-lg navbar-light border-bottom border-solid bg-light">
@@ -9,13 +11,13 @@ export default function Navbar(){
   <div className="collapse navbar-collapse  justify-content-center " id="navbarNav">
     <ul className="navbar-nav">
       <li className="nav-item active">
-        <a className="nav-link" href="#">Home </a>
+        <Link className="nav-link" href="/Utilisateur/ListUtilisateur">Home </Link>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href="#">Utilisateur</a>
+        <Link className="nav-link" href="/Utilisateur/ListUtilisateur">Utilisateur</Link>
       </li>
       <li className="nav-item">
-        <a className="nav-link" href="#">Tache</a>
+        <Link className="nav-link" href="#">Tache</Link>
       </li>
       
     </ul>
