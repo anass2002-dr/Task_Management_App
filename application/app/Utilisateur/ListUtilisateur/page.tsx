@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
-  return (
-    <div>
+export default function ListUtilisateur(){
+    return(
+        <div>
       <div className="my-3"><Link href='/AddUser' className="btn btn-success">Ajouter Utilisateur</Link></div>
     <table className="table">
   <thead>
@@ -37,5 +36,5 @@ export default function Home() {
 </table>
 
 </div>
-  );
+    )
 }
