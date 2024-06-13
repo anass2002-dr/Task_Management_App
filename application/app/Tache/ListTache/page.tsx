@@ -3,16 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function ListUtilisateur() {
-  const [Tache, setTache] = useState([]);
+export default function ListTache() {
+  const [taches, setTaches] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [tacheIdToDelete, setTacheIdToDelete] = useState(null);
 
   useEffect(() => {
-    // Replace with your actual API endpoint
     fetch("https://localhost:7019/api/Taches/GetTaches")
       .then((response) => response.json())
       .then((data) => {
-        setTache(data);
+        setTaches(data);
         setLoading(false);
       })
       .catch((error) => {
@@ -21,12 +22,19 @@ export default function ListUtilisateur() {
       });
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleDeleteClick = (id: any) => {
+    setTacheIdToDelete(id);
+    setShowModal(true);
+  };
+
   const deleteTache = (idTacheDelete: any) => {
-    fetch(`https://localhost:7019/api/Users/DeleteTache?id=${idTacheDelete}`, {
-      method: "DELETE", // Use 'DELETE' for deletion
+    const confirmed = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cette tâche?"
+    );
+    if (!confirmed) return;
+
+    fetch(`https://localhost:7019/api/Taches/DeleteTache?id=${idTacheDelete}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
       },
@@ -39,25 +47,28 @@ export default function ListUtilisateur() {
       })
       .then((data) => {
         if (data) {
-          console.log("User deleted successfully");
-          setTache(
-            Tache.filter((Tache: any) => Tache.idUser !== idTacheDelete)
+          console.log("Task deleted successfully");
+          setTaches(
+            taches.filter((tache: any) => tache.idTache !== idTacheDelete)
           );
         } else {
-          console.error("User deletion failed");
-          // Handle deletion failure (e.g., display an error message)
+          console.error("Task deletion failed");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle network errors or other exceptions
       });
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
       <div className="my-3">
-        <Link href="/Utilisateur/AddUser" className="btn btn-success">
-          Ajouter Utilisateur
+        <Link href="/Tache/AddTache" className="btn btn-success">
+          Ajouter une Tache
         </Link>
       </div>
       <table className="table">
@@ -68,35 +79,41 @@ export default function ListUtilisateur() {
             <th scope="col">Description</th>
             <th scope="col">Completed</th>
             <th scope="col">Due date</th>
-            <th scope="col">ref utilisateur</th>
+            <th scope="col">Utilisateur</th>
             <th scope="col" className="text-center" colSpan={2}>
               Operation
             </th>
           </tr>
         </thead>
         <tbody>
-          {Tache.map((tache: any, index) => (
+          {taches.map((tache: any, index) => (
             <tr key={index}>
               <th scope="row">{index + 1}</th>
               <td>{tache.title}</td>
               <td>{tache.description}</td>
-              <td>{tache.completed}</td>
+              <td className="text-center">
+                {tache.completed ? (
+                  <i className="bi bi-check-circle-fill text-success"></i>
+                ) : (
+                  <i className="bi bi-x-octagon text-danger"></i>
+                )}
+              </td>
               <td>{tache.dueDate}</td>
-              <td>{tache.userId}</td>
+              <td>{tache.user?.name || "N/A"}</td>
               <td>
                 <Link
-                  href={`/tache/updateTache/${tache.idTache}`}
+                  href={`/Tache/updateTache/${tache.idTache}`}
                   className="btn btn-primary"
                 >
-                  Update
+                  Modifier
                 </Link>
               </td>
               <td>
                 <button
                   className="btn btn-danger"
-                  onClick={() => deleteTache(tache.idUser)}
+                  onClick={() => deleteTache(tache.idTache)}
                 >
-                  Delete
+                  Supprimer
                 </button>
               </td>
             </tr>

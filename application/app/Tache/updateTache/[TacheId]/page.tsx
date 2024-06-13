@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation"; // Ensure to use 'next/navigation' for Next.js 13
+import { useParams, useRouter } from "next/navigation";
 
 const UpdateTache = () => {
   const [formData, setFormData] = useState({
@@ -8,34 +8,48 @@ const UpdateTache = () => {
     title: "",
     description: "",
     completed: false,
-    dueDate: "",
-    UserId: 0,
+    dueDate: new Date(),
+    userId: 0,
   });
+  const [users, setUsers] = useState([]);
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter();
 
   const { TacheId } = useParams();
 
   useEffect(() => {
+    // Fetch the task data by ID
     if (TacheId) {
-      fetch(`https://localhost:7019/api/Users/GetTacheById/${TacheId}`)
+      fetch(`https://localhost:7019/api/Taches/GetTacheById/${TacheId}`)
         .then((response) => response.json())
         .then((data: any) => {
           if (data) {
+            const parsedDate = data.dueDate
+              ? new Date(data.dueDate)
+              : new Date();
             setFormData({
-              idTache: data.idUser || "",
+              idTache: data.idTache || 0,
               title: data.title || "",
               description: data.description || "",
               completed: data.completed || false,
-              dueDate: data.dueDate || "",
-              UserId: data.UserId || "",
+              dueDate: parsedDate || "",
+              userId: data.userId || 0,
             });
           }
         })
         .catch((error) => {
-          console.error("Error fetching user:", error);
+          console.error("Error fetching task:", error);
         });
     }
+
+    fetch("https://localhost:7019/api/Users/GetUsers")
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
   }, [TacheId]);
 
   const handleChange = (e: any) => {
@@ -50,9 +64,8 @@ const UpdateTache = () => {
     e.preventDefault();
     console.log(formData);
 
-    // API call to update the user
-    fetch(`https://localhost:7019/api/Tacg/UpdateUser/`, {
-      method: "PUT", // Use 'PUT' for updates
+    fetch(`https://localhost:7019/api/Taches/UpdateTache/`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -61,17 +74,15 @@ const UpdateTache = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        // Handle success (e.g., display a success message or redirect)
         setAlertVisible(true);
-        // Redirect to the ListUtilisateur page after 3 seconds
+
         setTimeout(() => {
           setAlertVisible(false);
-          router.push("/Utilisateur/ListUtilisateur"); // Change this to your actual path
+          router.push("/Tache/ListTache");
         }, 1000);
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle error (e.g., display an error message)
       });
   };
 
@@ -79,44 +90,79 @@ const UpdateTache = () => {
     <div>
       {alertVisible && (
         <div className="alert alert-success" role="alert">
-          Utilisateur mis à jour avec succès
+          Tache mis à jour avec succès
         </div>
       )}
       <form onSubmit={handleSubmit}>
-        <div className="form-group m-3">
-          <input
-            type="text"
-            className="form-control"
-            id="Name"
-            name="Name"
-            value={formData.Name}
-            onChange={handleChange}
-            placeholder="Enter le nom de utilisateur"
-          />
+        <div className="row">
+          <div className="form-group col-6 my-3">
+            <input
+              type="text"
+              className="form-control  my-2"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              placeholder="Enter le titre de tache"
+            />
+          </div>
+          <div className="form-group col-6 my-3">
+            <input
+              type="text"
+              className="form-control  my-2"
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Enter le description de tache"
+            />
+          </div>
+          <div className="form-group col-6 my-3">
+            <label htmlFor="">Date de Tache</label>
+            <input
+              type="date"
+              className="form-control my-2"
+              id="dueDate"
+              name="dueDate"
+              value={formData.dueDate.toISOString().split("T")[0]}
+              onChange={handleChange}
+              placeholder="Enter le date de tache"
+            />
+          </div>
+          <div className="form-group col-6 my-3">
+            <label htmlFor="userId">Utilisateur</label>
+            <select
+              className="form-control my-2"
+              id="userId"
+              name="userId"
+              value={formData.userId}
+              onChange={handleChange}
+            >
+              <option value="">Select User</option>
+              {users.map((user: any) => (
+                <option key={user.idUser} value={user.idUser}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group col-6 my-1 form-checkl">
+            <input
+              type="checkbox"
+              className="form-check-input"
+              checked={formData.completed}
+              id="completed"
+              name="completed"
+              onChange={handleChange}
+            />
+            <label className="form-check-label " htmlFor="completed">
+              complete
+            </label>
+          </div>
         </div>
-        <div className="form-group m-3">
-          <input
-            type="text"
-            className="form-control"
-            id="Username"
-            name="Username"
-            value={formData.Username}
-            onChange={handleChange}
-            placeholder="Enter le username"
-          />
-        </div>
-        <div className="form-group m-3">
-          <input
-            type="email"
-            className="form-control"
-            id="Email"
-            name="Email"
-            value={formData.Email}
-            onChange={handleChange}
-            placeholder="Enter l'email"
-          />
-        </div>
-        <button type="submit" className="btn btn-primary m-3">
+
+        <button type="submit" className="btn btn-primary my-2">
           Mettre à jour
         </button>
       </form>

@@ -10,5 +10,6 @@ namespace Task_Management_App.Repository.TachesRepo
         Tache UpdateTache(Tache Tache);
         Tache GetTacheById(int id);
         bool DeleteTache(int id);
+        bool DeleteTacheByUserId(int id);
     }
 }

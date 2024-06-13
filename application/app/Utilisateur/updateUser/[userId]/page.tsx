@@ -1,13 +1,12 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation'; // Ensure to use 'next/navigation' for Next.js 13
-
+"use client";
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 const UpdateUser = () => {
   const [formData, setFormData] = useState({
-    IdUser: '',
-    Name: '',
-    Username: '',
-    Email: ''
+    IdUser: "",
+    Name: "",
+    Username: "",
+    Email: "",
   });
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter();
@@ -15,60 +14,57 @@ const UpdateUser = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-
     if (userId) {
       fetch(`https://localhost:7019/api/Users/GetUserById/${userId}`)
         .then((response) => response.json())
-        .then((data:any) => {
+        .then((data: any) => {
           if (data) {
             setFormData({
-              IdUser: data.idUser || '', // Provide default value if undefined
-              Name: data.name || '',
-              Username: data.username || '',
-              Email: data.email || ''
+              IdUser: data.idUser || "",
+              Name: data.name || "",
+              Username: data.username || "",
+              Email: data.email || "",
             });
           }
         })
         .catch((error) => {
-          console.error('Error fetching user:', error);
+          console.error("Error fetching user:", error);
         });
     }
   }, [userId]);
 
-  const handleChange = (e:any) => {
+  const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
-  const handleSubmit = (e:any) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(formData);
-    
+
     fetch(`https://localhost:7019/api/Users/UpdateUser/`, {
-      method: "PUT", // Use 'PUT' for updates
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Success:', data);
-      // Handle success (e.g., display a success message or redirect)
-      setAlertVisible(true);
-      // Redirect to the ListUtilisateur page after 3 seconds
-      setTimeout(() => {
-        setAlertVisible(false);
-        router.push('/Utilisateur/ListUtilisateur'); // Change this to your actual path
-      }, 1000);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      // Handle error (e.g., display an error message)
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+
+        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(false);
+          router.push("/Utilisateur/ListUtilisateur");
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -112,7 +108,7 @@ const UpdateUser = () => {
             placeholder="Enter l'email"
           />
         </div>
-        <button type="submit" className="btn btn-primary m-3">
+        <button type="submit" className="btn btn-primary">
           Mettre à jour
         </button>
       </form>

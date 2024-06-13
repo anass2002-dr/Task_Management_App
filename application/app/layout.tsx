@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import Navbar from "./Layout/navbar/page";
+import BootstrapConfig from "./BootstrapJs/bootstrapConfig";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,17 +19,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className+" container"}>
-        
+      <head>
+        <script
+          src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"
+          crossOrigin="anonymous"
+        ></script>
+      </head>
+      <body className={inter.className + " container"}>
         <div className="m-auto">
-          <Navbar/>
+          <Navbar />
         </div>
-        <div className="p-5">
-        {children}
-        </div>
-        
-        
-        </body>
+        <div className="p-5">{children}</div>
+        <BootstrapConfig />
+      </body>
     </html>
   );
 }

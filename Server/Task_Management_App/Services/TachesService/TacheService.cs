@@ -20,6 +20,7 @@ namespace Task_Management_App.Services.TachesService
                 Title = tacheDto.Title,
             Description = tacheDto.Description,
             Completed = tacheDto.Completed,
+            DueDate = tacheDto.DueDate,
             UserId = tacheDto.UserId,
         };
 
@@ -34,15 +35,15 @@ namespace Task_Management_App.Services.TachesService
             return _RepositoryTache.DeleteTache(id);
         }
 
-        public List<TacheDtos> GetTaches()
+        public List<Tache> GetTaches()
         {
             var listTache = _RepositoryTache.getTaches();
-            List<TacheDtos> li = new List<TacheDtos>();
-            foreach (var user in listTache)
-            {
-                li.Add(new TacheDtos(user));
-            }
-            return li;
+            //List<Tache> li = new List<Tache>();
+            //foreach (var user in listTache)
+            //{
+            //    li.Add(user);
+            //}
+            return listTache;
         }
 
         public TacheDtos GetTacheById(int id)
@@ -67,6 +68,7 @@ namespace Task_Management_App.Services.TachesService
                 Title = tacheDto.Title,
                 Description = tacheDto.Description,
                 Completed = tacheDto.Completed,
+                DueDate = tacheDto.DueDate,
                 UserId = tacheDto.UserId,
             };
             var user = _RepositoryTache.UpdateTache(tache);
@@ -79,6 +81,11 @@ namespace Task_Management_App.Services.TachesService
                 return null;
             }
 
+        }
+
+        public bool DeleteTacheByUserId(int id)
+        {
+            return _RepositoryTache.DeleteTacheByUserId(id);
         }
     }
 }

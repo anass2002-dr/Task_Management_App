@@ -18,7 +18,7 @@ namespace Task_Management_App.Controllers
             _tacheService = tacheService;
         }
         [HttpGet("GetTaches")]
-        public ActionResult<List<TacheDtos>> GetTaches()
+        public ActionResult<List<Tache>> GetTaches()
         {
             var users = _tacheService.GetTaches();
 
@@ -53,6 +53,11 @@ namespace Task_Management_App.Controllers
             var users = _tacheService.DeleteTache(id);
             return Ok(users);
         }
-
+        [HttpDelete("DeleteTacheByUserId")]
+        public ActionResult<bool> DeleteTacheByUserId(int id)
+        {
+            var users = _tacheService.DeleteTacheByUserId(id);
+            return Ok(users);
+        }
     }
 }

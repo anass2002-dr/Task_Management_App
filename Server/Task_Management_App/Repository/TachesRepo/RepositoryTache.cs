@@ -37,10 +37,20 @@ namespace Task_Management_App.Repository.TachesRepo
 
         public List<Tache> getTaches()
         {
-            var listTache = _dbContextTaches.Taches.ToList();
-
-
-            return listTache;
+            var listUtilisateur = (from t in _dbContextTaches.Taches
+                                   join u in _dbContextTaches.Utilisateurs
+                                   on t.UserId equals u.IdUser
+                                   select new Tache
+                                   {
+                                       IdTache = t.IdTache,
+                                       Title = t.Title,
+                                       Description = t.Description,
+                                       Completed = t.Completed,
+                                       DueDate = t.DueDate,
+                                       UserId = t.UserId,
+                                       User = u // or u.Username, depending on what you want
+                                   }).ToList();
+            return listUtilisateur;
         }
 
         public Tache GetTacheById(int id)
@@ -56,5 +66,20 @@ namespace Task_Management_App.Repository.TachesRepo
 
             return Tache;
         }
+
+        public bool DeleteTacheByUserId(int id)
+        {
+            try
+            {
+                _dbContextTaches.Taches.Remove(_dbContextTaches.Taches.FirstOrDefault(user => user.UserId == id));
+                _dbContextTaches.SaveChanges(true);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            return true;
+        }
+        
     }
 }
