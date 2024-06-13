@@ -9,24 +9,26 @@ const UpdateTache = () => {
     description: "",
     completed: false,
     dueDate: "",
-    userId: 0,
+    UserId: 0,
   });
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter();
 
-  const { userId } = useParams();
+  const { TacheId } = useParams();
 
   useEffect(() => {
-    if (userId) {
-      fetch(`https://localhost:7019/api/Users/GetUserById/${userId}`)
+    if (TacheId) {
+      fetch(`https://localhost:7019/api/Users/GetTacheById/${TacheId}`)
         .then((response) => response.json())
         .then((data: any) => {
           if (data) {
             setFormData({
-              idTache: data.idUser || "", // Provide default value if undefined
+              idTache: data.idUser || "",
               title: data.title || "",
               description: data.description || "",
-              Email: data.email || "",
+              completed: data.completed || false,
+              dueDate: data.dueDate || "",
+              UserId: data.UserId || "",
             });
           }
         })
@@ -34,9 +36,9 @@ const UpdateTache = () => {
           console.error("Error fetching user:", error);
         });
     }
-  }, [userId]);
+  }, [TacheId]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -44,12 +46,12 @@ const UpdateTache = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log(formData);
 
     // API call to update the user
-    fetch(`https://localhost:7019/api/Users/UpdateUser/`, {
+    fetch(`https://localhost:7019/api/Tacg/UpdateUser/`, {
       method: "PUT", // Use 'PUT' for updates
       headers: {
         "Content-Type": "application/json",
