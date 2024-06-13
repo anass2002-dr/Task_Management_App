@@ -1,13 +1,15 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation'; // Ensure to use 'next/navigation' for Next.js 13
+"use client";
+import React, { useState, useEffect } from "react";
+import { useParams, useRouter, useSearchParams } from "next/navigation"; // Ensure to use 'next/navigation' for Next.js 13
 
-const UpdateUser = () => {
+const UpdateTache = () => {
   const [formData, setFormData] = useState({
-    IdUser: '',
-    Name: '',
-    Username: '',
-    Email: ''
+    idTache: 0,
+    title: "",
+    description: "",
+    completed: false,
+    dueDate: "",
+    userId: 0,
   });
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter();
@@ -15,22 +17,21 @@ const UpdateUser = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-
     if (userId) {
       fetch(`https://localhost:7019/api/Users/GetUserById/${userId}`)
         .then((response) => response.json())
-        .then((data:any) => {
+        .then((data: any) => {
           if (data) {
             setFormData({
-              IdUser: data.idUser || '', // Provide default value if undefined
-              Name: data.name || '',
-              Username: data.username || '',
-              Email: data.email || ''
+              idTache: data.idUser || "", // Provide default value if undefined
+              title: data.title || "",
+              description: data.description || "",
+              Email: data.email || "",
             });
           }
         })
         .catch((error) => {
-          console.error('Error fetching user:', error);
+          console.error("Error fetching user:", error);
         });
     }
   }, [userId]);
@@ -39,14 +40,14 @@ const UpdateUser = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
-    
+
     // API call to update the user
     fetch(`https://localhost:7019/api/Users/UpdateUser/`, {
       method: "PUT", // Use 'PUT' for updates
@@ -55,21 +56,21 @@ const UpdateUser = () => {
       },
       body: JSON.stringify(formData),
     })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Success:', data);
-      // Handle success (e.g., display a success message or redirect)
-      setAlertVisible(true);
-      // Redirect to the ListUtilisateur page after 3 seconds
-      setTimeout(() => {
-        setAlertVisible(false);
-        router.push('/Utilisateur/ListUtilisateur'); // Change this to your actual path
-      }, 1000);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      // Handle error (e.g., display an error message)
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+        // Handle success (e.g., display a success message or redirect)
+        setAlertVisible(true);
+        // Redirect to the ListUtilisateur page after 3 seconds
+        setTimeout(() => {
+          setAlertVisible(false);
+          router.push("/Utilisateur/ListUtilisateur"); // Change this to your actual path
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle error (e.g., display an error message)
+      });
   };
 
   return (
@@ -121,4 +122,4 @@ const UpdateUser = () => {
   );
 };
 
-export default UpdateUser;
+export default UpdateTache;

@@ -8,7 +8,7 @@ const UserForm = () => {
     title: "",
     description: "",
     completed: false,
-    dueDate: new Date().getDate(),
+    dueDate: "",
     userId: 0,
   });
   const [utilisateurs, setUtilisateurs] = useState([]);
@@ -25,7 +25,7 @@ const UserForm = () => {
 
   useEffect(() => {
     // Replace with your actual API endpoint
-    fetch("https://localhost:7019/api/Users/GetUsers")
+    fetch("https://localhost:7019/api/Taches/GetTaches")
       .then((response) => response.json())
       .then((data) => {
         setUtilisateurs(data);
@@ -38,7 +38,7 @@ const UserForm = () => {
     e.preventDefault();
     console.log(formData);
 
-    fetch("https://localhost:7019/api/Users/AddTache", {
+    fetch("https://localhost:7019/api/Taches/AddTache", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
