@@ -58,38 +58,38 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 }
 
 
-2- Configurez CORS dans Program.cs pour permettre les requêtes du frontend :
+2. Configurez CORS dans Program.cs pour permettre les requêtes du frontend :
 builder.Services.AddCors(options => options.AddPolicy(name: "MyPolicy", policy =>
 {
     policy.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowAnyHeader();
 }));
 Frontend
-1 - Clonez ce dépôt :
+1. Clonez ce dépôt :
 git clone https://github.com/anass2002-dr/Task_Management_App.git
 cd Task_Management_App/application
 
-2 - Installez les dépendances du projet :
+2. Installez les dépendances du projet :
 
 npm install
 # ou si vous utilisez Yarn
 yarn install
 
-3- Créez un fichier .env.local à la racine de votre projet pour les variables d'environnement. Ajoutez les variables suivantes :
+3. Créez un fichier .env.local à la racine de votre projet pour les variables d'environnement. Ajoutez les variables suivantes :
 NEXT_PUBLIC_API_BASE_URL=https://localhost:7019/api
 
 ## Démarrage du Projet
 Backend:
-1 - Ouvrez le dossier server dans Visual Studio ou Visual Studio Code.
-2 - Exécutez les migrations pour configurer la base de données :
+1. Ouvrez le dossier server dans Visual Studio ou Visual Studio Code.
+2. Exécutez les migrations pour configurer la base de données :
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 3- Démarrez le serveur backend :
 dotnet run
 
 Frontend :
-1 - Dans un nouveau terminal, accédez au dossier application :
+1. Dans un nouveau terminal, accédez au dossier application :
 cd application
-2 - Démarrez le serveur de développement :
+2. Démarrez le serveur de développement :
 npm run dev
 # ou si vous utilisez Yarn
 yarn dev
